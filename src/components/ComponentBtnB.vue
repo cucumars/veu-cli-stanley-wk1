@@ -31,7 +31,6 @@
       btn: {
         deep: true,
         handler: function(btn) {
-          console.log('aaa');
           // alert(this.btn.type+btn.state);
            this.iconType.state = btn.state
         }
@@ -62,9 +61,7 @@
         this.btnIndex === 1 ? this.$emit('updateTextNumber1', state) :
           this.$emit('updateTextNumber2', state);
       },
-      checkTextNumberType(btnTypeState) {
-        return btnTypeState ? 'text' : 'number';
-      },
+
 
     }
   }

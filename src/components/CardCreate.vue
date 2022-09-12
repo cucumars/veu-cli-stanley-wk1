@@ -90,7 +90,7 @@
 					:class="{ required: !detailNow.textNumber1 && clickNext }"
 					@updateTextNumber1="updateTextNumber1"
 				/>&nbsp; &nbsp;
-				<input type="text"
+				<input :type="textNumberType1"
 					class="b-input"
 				/>
 			</div>
@@ -174,9 +174,21 @@
 				allTimeArr: ["1", "2", "3"],
 				checkedTimes: [], //時間選項填入陣列
 				singleCheckedTimes: 3, //單項時間選擇總數
+				textNumberType1: '',
+				textNumberType2: '',
 			}
 		},
 		watch: {
+			// btnBType[1]: {
+      //   deep: true,
+      //   handler: function(btnBType) {
+      //     console.log('btnBType',btnBType);
+      //     //  alert('xxx'+this.btn.type+btn.state);
+      //     // this.btnType.state = btn.state;
+			// 		// checkTextNumberType(btnTypeState) 
+
+      //   }
+      // }, 
 			//聯絡時間發生改變時
 			checkedTimes() {
         if (this.checkedTimes.length === this.singleCheckedTimes) {
@@ -196,6 +208,8 @@
 		mounted() {
 			// 初始化設定各種按鈕狀態
 			this.setFunctionButtonState();
+			this.textNumberType1 = this.checkTextNumberType( this.btnBType[1].state);	
+			this.textNumberType2 = this.checkTextNumberType( this.btnBType[2].state);			
 		},
 		methods:{
 			// mounted使用的方法
@@ -243,6 +257,11 @@
           this.checkedTimes = [];
         }
       },
+			// 改變按鈕 B 的輸入型態 type
+			checkTextNumberType(btnTypeState) {
+				console.log('btnTypeState =>', btnTypeState);
+        return btnTypeState ? 'text' : 'number';
+      },
 			
 			// 子層傳回父層的處理方法
 			// 按鈕 B 中止服務子層傳回父層的處理方法
@@ -252,10 +271,12 @@
 			// 按鈕 B 數字文字子層傳回父層的處理方法
 			updateTextNumber1(state){
         this.detailNow.state1 = state;
+				this.textNumberType1 = this.checkTextNumberType(state);			
       },
-			// 按鈕 B 子層傳回父層的處理方法
+			// 按鈕 B 數字文字子子層傳回父層的處理方法
 			updateTextNumber2(state){
         this.detailNow.state2 = state;
+				this.textNumberType2 = this.checkTextNumberType(state);		
       },
 		}
 	}
