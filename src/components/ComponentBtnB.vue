@@ -11,10 +11,11 @@
   export default {
     props: {
       btn: Object,
+      btnIndex: Number,
     },
     data() {
       return {
-          iconCType: {
+          iconBType: {
               'stop-service': {left:"中止", right:"服務", state:this.btn.state, disabled:this.btn.disabled},
               'number-text': {left:"數字", right:"文字", state:this.btn.state, disabled:this.btn.disabled},
             },
@@ -23,14 +24,19 @@
     },
     computed: {
       iconType() {
-        return this.iconCType[this.btn.type || "default"];
+        return this.iconBType[this.btn.type || "default"];
       },
     },
-    // watch: {
-    //   btn: {
-
-    //   }
-    // },
+    watch: {
+      btn: {
+        deep: true,
+        handler: function(btn) {
+          console.log('aaa');
+          // alert(this.btn.type+btn.state);
+           this.iconType.state = btn.state
+        }
+      },
+    },
     methods: {
       changeState(btnwhich){
         // console.log(this.iconType.state);
@@ -39,10 +45,27 @@
           if ((btnwhich === 'left' && this.iconType.state) || 
             (btnwhich === 'right' && !this.iconType.state)){
             this.iconType.state = !this.iconType.state;
+            // 中止服務按鈕狀態傳回父層
+            this.btn.type == 'stop-service' ? 
+              this.changeStopService(this.iconType.state) :
+                this.changeTextNumber(this.iconType.state) ;
+              // this.$emit('updateStopService',this.iconType.state) : 
+              //   this.btn.type == 'number-text' ? changeTextNumber() : '';
             return this.iconType.state;
           }
         }
-      }
+      },
+      changeStopService(state) {
+        this.$emit('updateStopService',state); 
+      },
+      changeTextNumber(state){
+        this.btnIndex === 1 ? this.$emit('updateTextNumber1', state) :
+          this.$emit('updateTextNumber2', state);
+      },
+      checkTextNumberType(btnTypeState) {
+        return btnTypeState ? 'text' : 'number';
+      },
+
     }
   }
 </script>

@@ -30,6 +30,17 @@ const routes = [
     name: 'main',
     component: () => import(/* webpackChunkName: "main" */ '@/views/MainView.vue')
   },
+  {
+    path: '/card-create',
+    name: 'cardCreate',
+    component: () => import(/* webpackChunkName: "cardCreate" */ '@/views/CardCreateView.vue')
+  },
+  {
+    path: '/card-show',
+    name: 'cardShow',
+    component: () => import(/* webpackChunkName: "cardShow" */ '@/views/CardShowView.vue')
+  },
+
 ]
 
 const router = createRouter({
