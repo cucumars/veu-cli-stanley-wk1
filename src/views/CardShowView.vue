@@ -56,7 +56,6 @@
       //重新取回LocalStorage之暫存資料
       reloadLocalStorage(){
         let data = JSON.parse(localStorage.getItem("data"));
-        console.log(data);
         data.forEach((item) => {
           this.cards.push(item);
         });

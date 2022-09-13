@@ -30,15 +30,14 @@
     watch: {
       btn: {
         deep: true,
+        immediate: true,
         handler: function(btn) {
-          // alert(this.btn.type+btn.state);
            this.iconType.state = btn.state
         }
       },
     },
     methods: {
       changeState(btnwhich){
-        // console.log(this.iconType.state);
         if (!this.iconType.disabled) {
           // 按服務不切換中止，按中止不                                                                    切換服務
           if ((btnwhich === 'left' && this.iconType.state) || 

@@ -1,6 +1,7 @@
 <template>
-	{{ detailNow }}
-  <div class="detail-area"> 
+	<!-- {{ detailNow }}{{clickNext }} -->
+  <div class="detail-area">
+		<span class="close_x" @click="deleteDetail">x</span> 
     <div class="area-up-left">
 			<div class="single-line">
         <component-b :btn="btnBType[0]"
@@ -18,8 +19,10 @@
 			</div>
 			<div class="single-line">
 					<span>性別:</span>
-					<label><input type="radio" required value="男" v-model="detailNow.gender">&nbsp;男&nbsp;&nbsp;&nbsp;&nbsp;</label>
-					<label><input type="radio" required value="女" v-model="detailNow.gender">&nbsp;女&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					<span :class="{ required: !detailNow.gender && clickNext }">
+						<label><input type="radio" required value="男" v-model="detailNow.gender">&nbsp;男&nbsp;&nbsp;&nbsp;&nbsp;</label>
+						<label><input type="radio" required value="女" v-model="detailNow.gender">&nbsp;女&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					</span>
 			</div>	
 			<div class="single-line">
         <label>生日: 
@@ -85,21 +88,24 @@
       </div>
 			<div class="single-line  btn-b-flex">
 				<component-b :btn="btnBType[1]" :btnIndex="1"
-					:btnContent="detailNow.textNumber1"
 					class="btn-b"
 					:class="{ required: !detailNow.textNumber1 && clickNext }"
 					@updateTextNumber1="updateTextNumber1"
 				/>&nbsp; &nbsp;
 				<input :type="textNumberType1"
+					v-model="detailNow.textNumber1"
 					class="b-input"
 				/>
 			</div>
 			<div class="single-line btn-b-flex">
         <component-b :btn="btnBType[2]" :btnIndex="2"
-          :btnContent="detailNow.textNumber2"
-          :class="[ 'btn-b', { required: !detailNow.textNumber2 && clickNext }]"
+          :class="[ 'btn-b', { required: !detailNow.textNumber2 && clickNext } ]"
           @updateTextNumber2="updateTextNumber2"
         />&nbsp; &nbsp;
+				<input :type="textNumberType2"
+					v-model="detailNow.textNumber2"
+					class="b-input"
+				/>
       </div> 
 			<div class="single-line contact-time">
         <span>可連絡時間: </span>
@@ -136,6 +142,7 @@
 		props: {
 			// 卡片的詳細資料
 			detail: Object,
+			clickNext: Boolean,
 		},
 		data() {
 			return {
@@ -144,7 +151,7 @@
 				btnBType: [
 						{ type: 'stop-service', state: true,  disabled:false},
 						{ type: 'number-text',  state: false, disabled:false},
-						{ type: 'number-text',  state: true, disabled:false},
+						{ type: 'number-text',  state: true,  disabled:false},
 				],
 				cities: [
           "臺北市",
@@ -179,22 +186,12 @@
 			}
 		},
 		watch: {
-			// btnBType[1]: {
-      //   deep: true,
-      //   handler: function(btnBType) {
-      //     console.log('btnBType',btnBType);
-      //     //  alert('xxx'+this.btn.type+btn.state);
-      //     // this.btnType.state = btn.state;
-			// 		// checkTextNumberType(btnTypeState) 
-
-      //   }
-      // }, 
 			//聯絡時間發生改變時
 			checkedTimes() {
+				// 選三個一定會變成需要選擇都可以
         if (this.checkedTimes.length === this.singleCheckedTimes) {
           this.isTimeAllChecked = true;
-          this.detailNow.contactTime = [];
-          this.detailNow.contactTime.push("0");
+          this.detailNow.contactTime = ["0"]
         } else {
           this.detailNow.contactTime = [...this.checkedTimes];
 					// 等效寫法
@@ -207,18 +204,56 @@
 		},
 		mounted() {
 			// 初始化設定各種按鈕狀態
-			this.setFunctionButtonState();
-			this.textNumberType1 = this.checkTextNumberType( this.btnBType[1].state);	
-			this.textNumberType2 = this.checkTextNumberType( this.btnBType[2].state);			
+			this.setFunctionBtnBState();
+			// 設定聯絡時間選擇	
+			this.setTimeChecked();
 		},
 		methods:{
-			// mounted使用的方法
-			setFunctionButtonState(){
+			// ===================================
+			// mounted使用的方法 放置區
+			// ===================================
+			setFunctionBtnBState(){
 				// 按鈕 B 中止服務
-				this.detailNow.stop_service.length !== 0 ? 
-					this.btnBType[0].state = this.detailNow.stop_service :
-						this.detailNow.stop_service=this.btnBType[0].state;
+				// 原寫法 => 太多 this.this.detailNow
+				// this.detailNow.stop_service.length !== 0 ? 
+				// 	this.btnBType[0].state = this.detailNow.stop_service :
+				// 		this.detailNow.stop_service=this.btnBType[0].state;
+				let detailNow = this.detailNow;
+				let btnB = this.btnBType;
+				detailNow.stop_service.length !== 0 ? btnB[0].state = detailNow.stop_service : detailNow.stop_service = btnB[0].state;				
+				detailNow.state1.length !== 0 ? btnB[1].state = detailNow.state1:	detailNow.state1 =  btnB[1].state;
+				detailNow.state2.length !== 0 ? btnB[2].state = detailNow.state2 : detailNow.state2 = btnB[2].state;			
+				// 轉換 BtnBType text or number
+				this.textNumberType1 = this.checkTextNumberType(btnB[1].state);	
+				this.textNumberType2 = this.checkTextNumberType(btnB[2].state);
 			},
+			//設定聯絡時間選擇
+			setTimeChecked() {
+        if (this.detailNow.contactTime) {
+          if (this.detailNow.contactTime[0] === "0") {
+            this.checkedTimes = [...this.allTimeArr];
+          }else{
+						this.checkedTimes = [...this.detailNow.contactTime];
+						// 原寫法
+						// this.detailNow.contactTime.forEach((item) => {
+						//   this.checkedTimes.push(item);
+						// });
+					}
+        }
+      },
+			// ===================================
+			// 一般使用的方法 放置區
+			// ===================================
+			idCheck() {
+				// 開頭1個英文字母(出生地),第2個1個1or2的數字(性別),其餘八個數字共十碼
+        let reg = /^[A-Z]{1}[1-2]{1}[0-9]{8}$/;
+        let checkOK = reg.test(this.detailNow.idCode);
+        if (!checkOK) {
+          // this.detailNow.idCode = "";//不需要空白,只需要提示修改
+          alert("身分證字號欄位請正確填寫！");
+        } 
+        return checkOK;
+      },
 			// 關於圖片上傳及立即顯示
 			// v-on 觸發事件時，如果沒有指定參數，預設就會將 event 物件當作參數傳入：
 			// 如果在 methods 需要傳入參數的情況，則可以在模板中指定傳入 $event 來指定 event 物件：
@@ -259,11 +294,11 @@
       },
 			// 改變按鈕 B 的輸入型態 type
 			checkTextNumberType(btnTypeState) {
-				console.log('btnTypeState =>', btnTypeState);
         return btnTypeState ? 'text' : 'number';
       },
-			
-			// 子層傳回父層的處理方法
+			// ======================================== 
+			// 子層傳回父層的處理方法 放置區
+			// ========================================
 			// 按鈕 B 中止服務子層傳回父層的處理方法
 			updateStopService(state){
 				this.detailNow.stop_service = state;
@@ -278,6 +313,12 @@
         this.detailNow.state2 = state;
 				this.textNumberType2 = this.checkTextNumberType(state);		
       },
+
+			// 呼叫父層的處理方法 放置區
+			// 刪除 此筆資料 (此張卡片)
+			deleteDetail(){
+        this.$emit('deleteDetail', this.detailId)
+      },
 		}
 	}
 </script>
@@ -290,7 +331,9 @@
     padding: 1px;
     display: flex;
     flex-wrap: wrap;
-
+		.required {
+			border: 1px solid red;
+		}
     .close_x{
       display: inline-flex;
       background-color: red;

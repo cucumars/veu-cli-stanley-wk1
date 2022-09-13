@@ -10,6 +10,8 @@
   <div class="data-area-all">
     <card-create  v-for="detail in cards" :key="detail.id"
       :detail="detail"
+      :click-next="clickNext"
+      @deleteDetail="deleteDetail"
     /> 
   </div> 
 </template>
@@ -30,7 +32,8 @@ export default {
           { type: 'add', content: '新增', to:this.add_unit, },
           { type: 'next', content: '下一步', to:this.next_step,},
         ],
-      cards: [],  
+      cards: [], 
+      clickNext: false, 
     }
   },
   mounted() {
@@ -71,28 +74,79 @@ export default {
         }
       )
     },
-    //取得將要設定的id
-    //沒資料直接取1,有資料則最後一筆的id+1
+    // 取得將要設定的id
+    // 沒資料直接取 1,有資料則最後一筆的 id + 1
     getUsedId() { 
       let temp = this.cards;
       let len = temp.length;
       return len > 0 ? (temp[len - 1].id + 1) : 1;
     },
-
     //下一步之前檢查資料是否皆填入
     next_step() { 
-      // 暫站存於localStorage
-      localStorage.setItem("data", JSON.stringify(this.cards));
-      this.$router.push("/card-show");
+      if (this.cards.length === 0) {
+          return alert("無資料可以儲存資料");
+      }
+      if (this.checkCardsDetail()) {
+        // 暫站存於localStorage
+        localStorage.setItem("data", JSON.stringify(this.cards));
+        this.$router.push("/card-show");
+      }else{
+        alert('尚有資料未填寫完整！');
+      }
     },
-    //重新取回LocalStorage之暫存資料並設定置資料結構中
+    // 檢查每一筆資料中的每一細項
+    checkCardsDetail(){
+      this.clickNext = true;
+      let cardAll = this.cards;
+      for (let i=0; i< cardAll.length; i++){
+          if (!this.checkDetail(cardAll[i].detail)) {
+            return false;
+          }
+      }
+      return true;
+    },
+    // 下一步之前檢查每一個個人資料是否皆填入
+    checkDetail(detail) {   
+      for (let key in detail){
+        let item = detail[key];
+        if (key === "contactTime") {
+          // 該陣列為空
+          if (!item.length) { 
+            return false;
+          }
+        // 該物件中該項目為空
+        }else if(!item & item.length === 0) { 
+          return false;
+        }
+      } 
+      return true;
+    },
+    // 重新取回LocalStorage之暫存資料並設定置資料結構中
     localStoragePreset() {
       if (localStorage.getItem("data")) {
         let data = JSON.parse(localStorage.getItem("data"));
-        data.forEach((item) => {
-          this.cards.push(item);
-        });
+        this.cards = [...data];
+        // 原寫法
+        // data.forEach((item) => {
+        //   this.cards.push(item);
+        // }); 
+        // 依聯絡時間排序取出資料
+        this.sortLoadData();
       }
+    },
+    // 依聯絡時間排序取出之資料
+    sortLoadData(){ 
+      this.cards.forEach((detail) => {
+          detail.detail.contactTime.sort(function (a, b) {
+          return a - b;
+        });
+      });
+    },
+    // 子層呼叫父層的處理方法 放置區 必須在父層的Html有相對應的 @name="funcname(parm)"
+    // 刪除該張資料
+    deleteDetail(detailId) { 
+      let loc = this.cards.findIndex(detail => detail.id == detailId);
+      this.cards.splice(loc, 1);
     },
   }
 }
