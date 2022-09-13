@@ -87,16 +87,55 @@
       buildDataAndDownloadCSV() {
         // 所有的 key值 資料會存在這
         let csvTitle = `id,${Object.keys(this.cards[0].detail).toString()}\n`;
+        csvTitle = csvTitle.replace(',image','');
+        console.log('ccc2',csvTitle);
+        // 所有的 value 資料會存在這
+        let arrayData = [];
+        this.cards.forEach((detail) => {
+          arrayData.push(detail.id)
+          for (let key in detail.detail){
+            console.log('xxx', detail.detail);
+            if (key === 'contactTime') {
+              // let x = detail.detail[key].toString().replace(',',';');
+              arrayData.push(`[${detail.detail[key].toString().replace(',',';')}],`);
+            }else {
+              arrayData.push(`${detail.detail[key]},`);
+            }
+          }
+          arrayData.push("\n");
+        })
+        // arrayTitle.push("\n");
+        // console.log( 'arrayTitle =>', arrayTitle);
+        console.log('arrayData =>', arrayData);
+        this.downloadCSV(csvTitle, arrayData);
+      },
+      downloadCSV(csvTitle,arrayData) {
+        let csvContent = csvTitle + arrayData.join(''); 
+        // console.log(arrayTitle.join(','), arrayData.join(','),csvContent);
+        // 下載的檔案名稱
+        let fileName = 'SessionRecord下載資料_' + (new Date()).getTime() + '.csv';
+        // 建立一個 a，並點擊它
+        const link = document.createElement("a");
+        link.setAttribute('href', 'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURI(csvContent));
+        link.setAttribute('download', fileName);
+        link.click();
+      },
+
+      // 建立csv資料結構並輸出csv檔
+      buildDataAndDownloadCSV2() {
+        // 所有的 key值 資料會存在這
+        let csvTitle = `id,${Object.keys(this.cards[0].detail).toString()}\n`;
         console.log('ccc',csvTitle);
         // 所有的 value 資料會存在這
         let csvData = '';
         this.cards.forEach((detail) => {
           csvData += `${detail.id},${Object.values(detail.detail).toString()}\n`;
+          console.log('ddd',`${detail.id},${Object.values(detail.detail).toString()}\n`);
         })
         this.downloadCSV(csvTitle,csvData);
       },
       // 下載csv檔案
-      downloadCSV(arrayTitle,arrayData) {
+      downloadCSV2(arrayTitle,arrayData) {
         let csvContent = arrayTitle + arrayData; 
         // 下載的檔案名稱
         let fileName = 'SessionRecord下載資料_' + (new Date()).getTime() + '.csv';
