@@ -62,7 +62,8 @@
 					<select  required
 						v-model="detailNow.city"
 						:class="{ required: !detailNow.city && clickNext }"
-					>
+					>  
+						<option value="" disabled selected>縣市</option>
 						<option 
               v-for="(city, index) in cities"
               :key="index"
