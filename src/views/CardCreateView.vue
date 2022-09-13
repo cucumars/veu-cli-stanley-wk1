@@ -28,9 +28,9 @@ export default {
   data() {
     return {
       btnAType: [
-          { type: 'prev', content: '回到首頁', to:'/',},
-          { type: 'add', content: '新增', to:this.add_unit, },
-          { type: 'next', content: '下一步', to:this.next_step,},
+          { type: 'prev', content: '回到首頁', to: '/main',},
+          { type: 'add', content: '新增', to: this.add_unit, },
+          { type: 'next', content: '下一步', to: this.next_step,},
         ],
       cards: [], 
       clickNext: false, 
@@ -48,7 +48,7 @@ export default {
         (fun_href ? this.$router.push(`${fun_href}`) : this.clickAlert(fun_href));
     },
     clickAlert:function() {
-      alert("此處程序尚未設置，請聯絡相關單位！");
+      alert('此處程序尚未設置，請聯絡相關單位！');
     },
     //新增一筆資料
     add_unit:function(){
@@ -81,15 +81,15 @@ export default {
       let len = temp.length;
       return len > 0 ? (temp[len - 1].id + 1) : 1;
     },
-    //下一步之前檢查資料是否皆填入
+    // 下一步之前檢查資料是否皆填入
     next_step() { 
       if (this.cards.length === 0) {
           return alert("無資料可以儲存資料");
       }
       if (this.checkCardsDetail()) {
         // 暫站存於localStorage
-        localStorage.setItem("data", JSON.stringify(this.cards));
-        this.$router.push("/card-show");
+        localStorage.setItem('data', JSON.stringify(this.cards));
+        this.$router.push('/card-show');
       }else{
         alert('尚有資料未填寫完整！');
       }
@@ -109,7 +109,7 @@ export default {
     checkDetail(detail) {   
       for (let key in detail){
         let item = detail[key];
-        if (key === "contactTime") {
+        if (key === 'contactTime') {
           // 該陣列為空
           if (!item.length) { 
             return false;
@@ -142,7 +142,9 @@ export default {
         });
       });
     },
+    // ==========================================================================
     // 子層呼叫父層的處理方法 放置區 必須在父層的Html有相對應的 @name="funcname(parm)"
+    // ==========================================================================
     // 刪除該張資料
     deleteDetail(detailId) { 
       let loc = this.cards.findIndex(detail => detail.id == detailId);

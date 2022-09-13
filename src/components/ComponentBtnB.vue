@@ -16,21 +16,22 @@
     data() {
       return {
           iconBType: {
-              'stop-service': {left:"中止", right:"服務", state:this.btn.state, disabled:this.btn.disabled},
-              'number-text': {left:"數字", right:"文字", state:this.btn.state, disabled:this.btn.disabled},
+              'stop-service': {left:'中止', right:'服務', state:this.btn.state, disabled:this.btn.disabled},
+              'number-text': {left:'數字', right:'文字', state:this.btn.state, disabled:this.btn.disabled},
             },
           state:false,
       }
     },
     computed: {
       iconType() {
-        return this.iconBType[this.btn.type || "default"];
+        return this.iconBType[this.btn.type || 'default'];
       },
     },
     watch: {
       btn: {
         deep: true,
-        immediate: true,
+        // 代表在watch裡聲明了btn這個方法之後立即先去執行handler方法
+        // immediate: true,
         handler: function(btn) {
            this.iconType.state = btn.state
         }
@@ -60,8 +61,6 @@
         this.btnIndex === 1 ? this.$emit('updateTextNumber1', state) :
           this.$emit('updateTextNumber2', state);
       },
-
-
     }
   }
 </script>

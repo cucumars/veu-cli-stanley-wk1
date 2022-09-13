@@ -56,7 +56,7 @@
 		</div>
 
 		<div class="area-down">
-			<div class="single-line"> 
+			<div class="single-line address-all"> 
 				<label> 
 					地址:
 					<select  required
@@ -154,31 +154,31 @@
 						{ type: 'number-text',  state: true,  disabled:false},
 				],
 				cities: [
-          "臺北市",
-          "新北市",
-          "桃園市",
-          "臺中市",
-          "臺南市",
-          "高雄市",
-          "新竹縣",
-          "苗栗縣",
-          "彰化縣",
-          "南投縣",
-          "雲林縣",
-          "嘉義縣",
-          "屏東縣",
-          "宜蘭縣",
-          "花蓮縣",
-          "臺東縣",
-          "澎湖縣",
-          "金門縣",
-          "連江縣",
-          "基隆市",
-          "新竹市",
-          "嘉義市",
+          '臺北市',
+          '新北市',
+          '桃園市',
+          '臺中市',
+          '臺南市',
+          '高雄市',
+          '新竹縣',
+          '苗栗縣',
+          '彰化縣',
+          '南投縣',
+          '雲林縣',
+          '嘉義縣',
+          '屏東縣',
+          '宜蘭縣',
+          '花蓮縣',
+          '臺東縣',
+          '澎湖縣',
+          '金門縣',
+          '連江縣',
+          '基隆市',
+          '新竹市',
+          '嘉義市',
         ],
 				isTimeAllChecked: false,//全部時間都可以
-				allTimeArr: ["1", "2", "3"],
+				allTimeArr: ['1', '2', '3'],
 				checkedTimes: [], //時間選項填入陣列
 				singleCheckedTimes: 3, //單項時間選擇總數
 				textNumberType1: '',
@@ -191,7 +191,7 @@
 				// 選三個一定會變成需要選擇都可以
         if (this.checkedTimes.length === this.singleCheckedTimes) {
           this.isTimeAllChecked = true;
-          this.detailNow.contactTime = ["0"]
+          this.detailNow.contactTime = ['0']
         } else {
           this.detailNow.contactTime = [...this.checkedTimes];
 					// 等效寫法
@@ -230,7 +230,7 @@
 			//設定聯絡時間選擇
 			setTimeChecked() {
         if (this.detailNow.contactTime) {
-          if (this.detailNow.contactTime[0] === "0") {
+          if (this.detailNow.contactTime[0] === '0') {
             this.checkedTimes = [...this.allTimeArr];
           }else{
 						this.checkedTimes = [...this.detailNow.contactTime];
@@ -249,8 +249,8 @@
         let reg = /^[A-Z]{1}[1-2]{1}[0-9]{8}$/;
         let checkOK = reg.test(this.detailNow.idCode);
         if (!checkOK) {
-          // this.detailNow.idCode = "";//不需要空白,只需要提示修改
-          alert("身分證字號欄位請正確填寫！");
+          // this.detailNow.idCode = '';//不需要空白,只需要提示修改
+          alert('身分證字號欄位請正確填寫！');
         } 
         return checkOK;
       },
@@ -282,7 +282,7 @@
 			getTimeAll() {
         if (this.isTimeAllChecked) {
 					// 設置只選
-          this.detailNow.contactTime = ["0"];
+          this.detailNow.contactTime = ['0'];
 					// 當勾選都可以時所有其它的聯絡時間自動全部取消勾選
           this.checkedTimes = [...this.allTimeArr];
         } else {
@@ -328,7 +328,7 @@
     position: relative;
     width: 100%;
     border: 1px white solid;
-    padding: 1px;
+    padding: 10px;
     display: flex;
     flex-wrap: wrap;
 		.required {
@@ -350,7 +350,6 @@
 		.single-line{
 			height: 30px;
 		}	
-
     .area-up-left{
       width: 60%;
       text-align: left;
@@ -360,10 +359,9 @@
         }
       }
       .id-code{
-        width:90px;
+        width:85px;
       }
     }
-
     .area-up-right{
       width: 35%;
       height: 135px;
@@ -398,7 +396,12 @@
     .area-down{
       width: 100%;
       text-align: left;
-
+			.address-all {
+				@media (max-width:576px){
+					line-height: 30px;
+					margin-bottom: 30px;
+        }
+			}
       .address {
         width: calc(100% - 150px - 32px);
         @media (max-width:1199px){
@@ -408,7 +411,8 @@
             width: calc(100% - 150px - 24px);
         }
         @media (max-width:576px){
-            width: calc(100% - 150px);
+            // width: calc(100% - 150px);
+						width: 95%
         }
       }
       .contact-time{

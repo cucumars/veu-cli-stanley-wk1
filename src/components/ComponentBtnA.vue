@@ -14,19 +14,19 @@ export default {
   data() {
     return {
       icon: {
-        record: require("@/assets/img/button-record.svg"),
-        save: require("@/assets/img/button-save.svg"),
-        add: require("@/assets/img/button-add.svg"),
-        export: require("@/assets/img/button-export.svg"),
-        prev: require("@/assets/img/button-prev.svg"),
-        next: require("@/assets/img/button-next.svg"),
+        record: require('@/assets/img/button-record.svg'),
+        save: require('@/assets/img/button-save.svg'),
+        add: require('@/assets/img/button-add.svg'),
+        export: require('@/assets/img/button-export.svg'),
+        prev: require('@/assets/img/button-prev.svg'),
+        next: require('@/assets/img/button-next.svg'),
       },
     };
   },
 
   computed: {
     iconType() {
-      return this.icon[this.type || "default"];
+      return this.icon[this.type || 'default'];
     },
   },
 };

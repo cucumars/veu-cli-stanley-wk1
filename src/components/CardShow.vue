@@ -36,11 +36,9 @@
 
 <script>
   export default {
-    
     props: {
       detail: Object,
     },
-
     data() {
       return {
         detailNow: this.detail.detail,
